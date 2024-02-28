@@ -8,13 +8,14 @@
     <main>
         <h1>Create New Account</h1>
         <form action="/signup" method="POST">
+            <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
             <p>
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email">
             </p>
             <p>
-                <label for="confirmPassword">Confirm Password</label>
-                <input type="password" name="confirmPassword" id="confirmPassword">
+                <label for="confirmEmail">Confirm Email</label>
+                <input type="password" name="confirmEmail" id="confirmEmail">
             </p>
             <p>
                 <label for="password">Password</label>
