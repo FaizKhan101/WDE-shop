@@ -2,6 +2,8 @@ const express = require("express");
 const csrf = require("csurf")
 const expressSession = require("express-session")
 
+const baseRoutes = require("./routes/base.routes")
+const productsRoutes = require("./routes/products.routes")
 const authRoutes = require("./routes/auth.routes");
 const db = require("./data/database");
 const addCsrfTokenMiddleware = require("./middlewares/csrf-token")
@@ -22,7 +24,9 @@ app.use(csrf())
 
 app.use(addCsrfTokenMiddleware.addCarfToken)
 
+app.use(baseRoutes)
 app.use(authRoutes);
+app.use(productsRoutes)
 
 app.use(errorHandlerMiddleware.errorHandler)
 

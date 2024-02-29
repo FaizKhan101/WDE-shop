@@ -1,4 +1,5 @@
 const  User = require("../models/user.model")
+const createUserSession = require("../util/authentication")
 
 exports.getSignup = (req, res, next) => {
   res.render("customer/auth/signup");
@@ -25,4 +26,23 @@ exports.getLogin = (req, res, next) => {
   res.render("customer/auth/login");
 };
 
-exports.postLogin = (req, res, next) => {};
+exports.postLogin = async (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  const existingUser = await User.userWithSameEmail(email)
+
+  if (!existingUser) {
+    return res.redirect("/login")
+  }
+
+  const passwordIsCorrect = await User.hasMatchingPassword(password, existingUser.password)
+
+  if (!passwordIsCorrect) {
+    return res.redirect("/login")
+  }
+
+  createUserSession(req, existingUser, () => {
+    res.redirect("/")
+  })
+};
