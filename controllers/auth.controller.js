@@ -1,5 +1,6 @@
 const User = require("../models/user.model");
 const createUserSession = require("../util/authentication");
+const userDetailsAreValid = require("../util/validation");
 
 exports.getSignup = (req, res, next) => {
   res.render("customer/auth/signup");
@@ -13,6 +14,23 @@ exports.postSignup = async (req, res, next) => {
   const street = req.body.street;
   const postalCode = req.body.postalCode;
   const city = req.body.city;
+
+  const userExist = await User.userWithSameEmail(email);
+
+  if (
+    !userDetailsAreValid(
+      email,
+      confirmEmail,
+      password,
+      fullname,
+      street,
+      postalCode,
+      city
+    ) ||
+    userExist
+  ) {
+    return res.redirect("/signup");
+  }
 
   const user = new User(email, password, fullname, street, postalCode, city);
   try {
@@ -30,12 +48,11 @@ exports.getLogin = (req, res, next) => {
 exports.postLogin = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
-  let existingUser
+  let existingUser;
   try {
     existingUser = await User.userWithSameEmail(email);
-    
   } catch (error) {
-    return next(error)
+    return next(error);
   }
 
   if (!existingUser) {
