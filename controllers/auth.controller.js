@@ -1,9 +1,23 @@
 const User = require("../models/user.model");
 const createUserSession = require("../util/authentication");
 const userDetailsAreValid = require("../util/validation");
+const sessionFlash = require("../util/session-flash");
 
-exports.getSignup = (req, res, next) => {
-  res.render("customer/auth/signup");
+exports.getSignup = async (req, res, next) => {
+  let sessionData = await sessionFlash.getSessionData(req);
+
+  if (!sessionData) {
+    sessionData = {
+      email: "",
+      confirmEmail: "",
+      password: "",
+      fullname: "",
+      street: "",
+      postalCode: "",
+      city: "",
+    };
+  }
+  res.render("customer/auth/signup", { inputData: sessionData });
 };
 
 exports.postSignup = async (req, res, next) => {
@@ -15,8 +29,6 @@ exports.postSignup = async (req, res, next) => {
   const postalCode = req.body.postalCode;
   const city = req.body.city;
 
-  const userExist = await User.userWithSameEmail(email);
-
   if (
     !userDetailsAreValid(
       email,
@@ -26,10 +38,48 @@ exports.postSignup = async (req, res, next) => {
       street,
       postalCode,
       city
-    ) ||
-    userExist
+    )
   ) {
-    return res.redirect("/signup");
+    sessionFlash.flashDataIntoSession(
+      req,
+      {
+        errorMessage:
+          "Please check your inputs. Password must be at least 6 character long, Postal code must be 5 character long.",
+        email: email,
+        confirmEmail: confirmEmail,
+        password: password,
+        fullname: fullname,
+        street: street,
+        postalCode: postalCode,
+        city: city,
+      },
+      () => {
+        res.redirect("/signup");
+      }
+    );
+    return;
+  }
+  const userExist = await User.userWithSameEmail(email);
+
+  if (userExist) {
+    sessionFlash.flashDataIntoSession(
+      req,
+      {
+        errorMessage:
+          "User with email already exist. Try to login instead.",
+        email: email,
+        confirmEmail: confirmEmail,
+        password: password,
+        fullname: fullname,
+        street: street,
+        postalCode: postalCode,
+        city: city,
+      },
+      () => {
+        res.redirect("/signup");
+      }
+    );
+    return;
   }
 
   const user = new User(email, password, fullname, street, postalCode, city);
@@ -41,8 +91,16 @@ exports.postSignup = async (req, res, next) => {
   res.redirect("/login");
 };
 
-exports.getLogin = (req, res, next) => {
-  res.render("customer/auth/login");
+exports.getLogin = async (req, res, next) => {
+  let sessionData = await sessionFlash.getSessionData(req);
+
+  if (!sessionData) {
+    sessionData = {
+      email: "",
+      password: "",
+    };
+  }
+  res.render("customer/auth/login", { inputData: sessionData });
 };
 
 exports.postLogin = async (req, res, next) => {
@@ -56,7 +114,18 @@ exports.postLogin = async (req, res, next) => {
   }
 
   if (!existingUser) {
-    return res.redirect("/login");
+    sessionFlash.flashDataIntoSession(
+      req,
+      {
+        errorMessage: "User with this email not exist.",
+        email: email,
+        password: password,
+      },
+      () => {
+        res.redirect("/login");
+      }
+    );
+    return;
   }
 
   const passwordIsCorrect = await User.hasMatchingPassword(
@@ -65,7 +134,18 @@ exports.postLogin = async (req, res, next) => {
   );
 
   if (!passwordIsCorrect) {
-    return res.redirect("/login");
+    sessionFlash.flashDataIntoSession(
+      req,
+      {
+        errorMessage: "Incorrect Password.",
+        email: email,
+        password: password,
+      },
+      () => {
+        res.redirect("/login");
+      }
+    );
+    return;
   }
 
   createUserSession(req, existingUser, () => {

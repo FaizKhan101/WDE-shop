@@ -6,18 +6,21 @@
 <body>
     <%- include("../../shared/includes/header") %>
     <main>
+        <% if (inputData.errorMessage) { %>
+                <p class="alert"><%= inputData.errorMessage %></p>
+        <% } %>
         <h1>Login</h1>
         <form action="/login" method="POST">
             <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
 
             <p>
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email">
+                <input type="email" id="email" name="email" value="<%= inputData.email %>">
             </p>
 
             <p>
                 <label for="password">Password</label>
-                <input type="password" id="password" minlength="6" name="password">
+                <input type="password" id="password" minlength="6" name="password" value="<%= inputData.password %>">
             </p>
 
             <button class="btn" type="submit">Login</button>
