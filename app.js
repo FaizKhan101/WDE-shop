@@ -1,3 +1,5 @@
+const path = require("path")
+
 const express = require("express");
 const csrf = require("csurf")
 const expressSession = require("express-session")
@@ -19,6 +21,7 @@ app.set("views", "views");
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.static("public"));
+app.use("/admin", express.static(path.join(__dirname, "product-data/images")))
 
 app.use(expressSession(sessionConfig()))
 

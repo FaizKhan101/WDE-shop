@@ -10,7 +10,11 @@
             <p><a href="/admin/products/new" class="btn">Add Product</a></p>
         </section>
         <section>
-            <p>List of all the products...</p>
+            <ul>
+                <% for (let product of products) { %>
+                    <%- include("../includes/product-item", { product }) %>
+                <% } %>
+            </ul>
         </section>
     </main>
 <%- include("../../shared/includes/footer") %>

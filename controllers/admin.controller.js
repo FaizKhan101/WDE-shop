@@ -1,24 +1,29 @@
-const Product = require("../models/product.model")
+const Product = require("../models/product.model");
 
-exports.getProducts = (req, res, next) => {
-    res.render("admin/products/all-products")
-}
+exports.getProducts = async (req, res, next) => {
+  try {
+    const products = await Product.findAll();
+    res.render("admin/products/all-products", { products });
+  } catch (error) {
+    return next(error);
+  }
+};
 
 exports.getNewProducts = (req, res, next) => {
-    res.render("admin/products/new-product")
-}
+  res.render("admin/products/new-product");
+};
 
 exports.createProduct = async (req, res, next) => {
-    const product = new Product({
-        ...req.body,
-        image: req.file.filename
-    })
+  const product = new Product({
+    ...req.body,
+    image: req.file.filename,
+  });
 
-    try {
-        await product.save()
-    } catch (error) {
-        return next(error)
-    }
+  try {
+    await product.save();
+  } catch (error) {
+    return next(error);
+  }
 
-    res.redirect("/admin/products")
-}
+  res.redirect("/admin/products");
+};
