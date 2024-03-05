@@ -8,8 +8,7 @@ class Product {
     this.price = +productData.price;
     this.description = productData.description;
     this.image = productData.image;
-    this.imagePath = `products-data/images/${productData.image}`;
-    this.imageUrl = `products/assets/images/${productData.image}`;
+    this.updateImageData()
     if (productData._id) {
       this.id = productData._id.toString();
     }
@@ -23,7 +22,25 @@ class Product {
       description: this.description,
       image: this.image,
     };
-    return db.getDb().collection("products").insertOne(productData);
+
+    if (this.id) {
+      if (!this.image) {
+        delete productData.image
+      }
+      return db.getDb().collection("products").updateOne({ _id: new ObjectId(this.id)}, { $set: productData })
+    } else {
+      return db.getDb().collection("products").insertOne(productData);
+    }
+  }
+
+  updateImageData() {
+    this.imagePath = `products-data/images/${this.image}`;
+    this.imageUrl = `products/assets/images/${this.image}`;
+  }
+
+  replaceImage(newImage) {
+    this.image = newImage
+    this.updateImageData
   }
 
   static async findAll() {
