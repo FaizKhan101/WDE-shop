@@ -10,7 +10,7 @@ exports.getProducts = async (req, res, next) => {
 };
 
 exports.getNewProducts = (req, res, next) => {
-  res.render("admin/products/new-product");
+  res.render("admin/products/new-product", { product: {} });
 };
 
 exports.createProduct = async (req, res, next) => {
@@ -26,4 +26,18 @@ exports.createProduct = async (req, res, next) => {
   }
 
   res.redirect("/admin/products");
+};
+
+exports.getUpdateProduct = async (req, res, next) => {
+  try {
+    const product = await Product.fincById(req.params.id)
+    res.render("admin/products/update-product", { product })
+  } catch (error) {
+    next(error)
+  }
+
+};
+
+exports.postUpdateProduct = async (req, res, next) => {
+  
 };

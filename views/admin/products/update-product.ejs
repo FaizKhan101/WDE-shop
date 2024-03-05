@@ -5,12 +5,8 @@
     <%- include("../../shared/includes/header") %>
     <main>
         <h1>Add New Product</h1>
-        <%- include("../includes/product-form", { submittedUrl: "/admin/products", product: {
-            title: '',
-            summary: '',
-            price: '',
-            description: ''
-        } }) %>
+        <%- include("../includes/product-form", { submittedUrl: "/admin/products/" + product._id, product: product }) %>
+
     </main>
 <%- include("../../shared/includes/footer") %>
 
