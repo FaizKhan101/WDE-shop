@@ -60,7 +60,7 @@ exports.deleteProduct = async (req, res, next) => {
   const prodId = req.params.id
   try {
     await Product.deleteProductById(prodId)
-    res.redirect("/admin/products")
+    res.json({ message: "Product deleted." })
   } catch (error) {
     next(error)
   }

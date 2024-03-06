@@ -6,10 +6,8 @@
         </div>
         <div class="product-item-action">
             <a href="/admin/products/<%= product.id %>" class="btn btn-alt">View & Edit</a>
-            <form action="/admin/products/delete/<%= product.id %>" method="POST">
                 <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
-                <button class="btn btn-alt">Delete</button>
-            </form>
+                <button class="btn btn-alt" data-productid="<%= product.id %>" data-csrf="<%= locals.csrfToken %>">Delete</button>
         </div>
     </article>
 </li>
