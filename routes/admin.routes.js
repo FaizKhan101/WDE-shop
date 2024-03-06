@@ -15,4 +15,6 @@ router.get("/products/:id", adminController.getUpdateProduct)
 
 router.post("/products/:id",  configuredMulterMiddleware ,adminController.postUpdateProduct)
 
+router.post("/products/delete/:id", adminController.deleteProduct)
+
 module.exports = router

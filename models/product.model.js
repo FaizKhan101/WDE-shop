@@ -63,6 +63,15 @@ class Product {
     }
   }
 
+  static deleteProductById(prodId) {
+    try {
+      return db.getDb().collection("products").deleteOne({ _id: new ObjectId(prodId) })
+    } catch (error) {
+    error.code = 404      
+    throw new Error("Deleted product failed!")
+    }
+  }
+
 }
 
 module.exports = Product;
