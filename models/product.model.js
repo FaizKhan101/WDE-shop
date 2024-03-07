@@ -59,7 +59,7 @@ class Product {
         .findOne({ _id: new ObjectId(prodId) });
     } catch (error) {
       error.code = 404;
-      throw new Error("Product not found with given id.");
+      throw error
     }
   }
 
@@ -68,7 +68,7 @@ class Product {
       return db.getDb().collection("products").deleteOne({ _id: new ObjectId(prodId) })
     } catch (error) {
     error.code = 404      
-    throw new Error("Deleted product failed!")
+    throw error
     }
   }
 
