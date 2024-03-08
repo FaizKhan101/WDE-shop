@@ -34,8 +34,8 @@ app.use(addCsrfTokenMiddleware.addCarfToken)
 app.use(checkAuthMiddleware.checkAuthStatus)
 
 app.use(baseRoutes)
-app.use(authRoutes);
 app.use(productsRoutes)
+app.use(authRoutes);
 app.use(protectRoutesMiddleware)
 app.use("/admin", adminRoutes)
 

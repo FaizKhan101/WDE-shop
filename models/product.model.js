@@ -35,7 +35,7 @@ class Product {
 
   updateImageData() {
     this.imagePath = `products-data/images/${this.image}`;
-    this.imageUrl = `products/assets/images/${this.image}`;
+    this.imageUrl = `/images/${this.image}`;
   }
 
   replaceImage(newImage) {
@@ -53,10 +53,12 @@ class Product {
 
   static async fincById(prodId) {
     try {
-      return db
+
+      const productData = await db
         .getDb()
         .collection("products")
         .findOne({ _id: new ObjectId(prodId) });
+        return new Product(productData)
     } catch (error) {
       error.code = 404;
       throw error
