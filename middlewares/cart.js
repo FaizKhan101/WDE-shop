@@ -1,17 +1,22 @@
-const Cart = require("../models/cart.model")
+const Cart = require("../models/cart.model");
 
 const initializeCart = (req, res, next) => {
-    let cart;
+  let cart;
+  const sessionCart = req.session.cart;
 
-    if (!req.session.cart) {
-        cart = new Cart()
-    } else {
-        cart = new Cart(req.session.cart.items)
-    }
+  if (!sessionCart) {
+    cart = new Cart();
+  } else {
+    cart = new Cart(
+      sessionCart.items,
+      sessionCart.totalQuantity,
+      sessionCart.totalPrice
+    );
+  }
 
-    res.locals.cart = cart
+  res.locals.cart = cart;
 
-    next()
-}
+  next();
+};
 
-module.exports = initializeCart
+module.exports = initializeCart;

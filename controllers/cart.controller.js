@@ -16,6 +16,6 @@ exports.addCartItem = async (req, res, next) => {
 
     res.status(201).json({
         message: "Cart Updated!",
-        newTotalItem: cart.totalQuantity
+        newTotalItems: cart.totalQuantity
     })
 }
