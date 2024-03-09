@@ -18,12 +18,12 @@ class Cart {
         cartItem.totalPrice = item.totalPrice + product.price;
         this.items[i] = cartItem;
         this.totalQuantity += 1;
-        this.totalPrice += +product.price;
+        this.totalPrice += product.price;
         return;
       }
     }
     this.totalQuantity += 1;
-    this.totalPrice += +product.price;
+    this.totalPrice += product.price;
     this.items.push(cartItem);
   }
 }
