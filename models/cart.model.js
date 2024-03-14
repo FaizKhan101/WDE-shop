@@ -26,6 +26,30 @@ class Cart {
     this.totalPrice += product.price;
     this.items.push(cartItem);
   }
+
+  updateItem(productId, newQuantity) {
+    for (let i = 0; i < this.items.length; i++) {
+      const item = this.items[i];
+      if (item.product.id === productId && newQuantity > 0) {
+        let cartItem = { ...item }
+        let changeQuantity = newQuantity - item.quantity
+        cartItem.quantity = newQuantity;
+        cartItem.totalPrice = newQuantity * item.product.price;
+        this.items[i] = cartItem;
+
+        this.totalQuantity += changeQuantity;
+        this.totalPrice += changeQuantity * item.product.price;
+        return { updatedItemPrice: cartItem.totalPrice };
+      } else if (item.product.id === productId && newQuantity <= 0) {
+        this.items.splice(i, 1)
+
+        this.totalQuantity -= item.quantity;
+        this.totalPrice -= item.totalPrice;
+
+        return { updatedItemPrice: 0 };
+      }
+    }
+  }
 }
 
 module.exports = Cart;

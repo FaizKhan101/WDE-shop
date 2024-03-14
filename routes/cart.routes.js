@@ -8,4 +8,6 @@ router.get("/", cartController.getCart)
 
 router.post("/items", cartController.addCartItem)
 
+router.patch("/items", cartController.updateCateItem)
+
 module.exports = router
